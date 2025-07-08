@@ -35,8 +35,9 @@ async def on_ready():
 
 
 @bot.command(name="user_status")
-async def user_status(ctx, nickname: str):
+async def user_status(ctx, *nickname):
 
+    nickname = " ".join(nickname)
     guild = ctx.guild
     member = discord.utils.get(guild.members, display_name=nickname)
 
@@ -52,13 +53,29 @@ async def user_status(ctx, nickname: str):
         if member.activities:
             activity = member.activities[0]
             await ctx.author.send(f"Currently playing: {activity}.")
+
+            spotify_activity = discord.utils.find(
+                lambda a: isinstance(a, discord.Spotify), 
+                member.activities
+            )
+
+            if spotify_activity:
+                await ctx.author.send(f"Currently listening to {spotify_activity[0].title}")
+            else:
+                await ctx.author.send(f"{nickname} is not listening to Spotify right now...")
             
         else:
             await ctx.author.send(
                 f"{member.name} has no current activity."
             )
-        return
+    elif member.status == discord.Status.dnd:
+        await ctx.author.send(f"{member.name} doesn\'t want to be disturbed...")
+        
 
-    status_msg = f"{member.name} is {member.status}."
-    await ctx.get_channel(CHANNEL_ID).send(f"Hey! {status_msg}")
+    
+    else:
+        await ctx.author.send(f"{member.name} is offline")
+
+    channel = bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID)
+    await channel.send(f"Hey! {nickname} is a great person")
 
