@@ -33,6 +33,25 @@ async def on_ready():
     except Exception as e:
         logger.error(f"Failed to send on_ready message: {e}")
 
+@bot.command()
+async def spotify(ctx, user: discord.Member = None):
+    if user == None:
+        user = ctx.author
+        pass
+
+    if user.activities:
+        for activity in user.activities:
+            if isinstance(activity, discord.Spotify):
+                embed = discord.Embed(
+                    title = f"{user.name}'s Spotify",
+                    description = "Listening to {}".format(activity.title),
+                    color = 0xC902ff
+                )
+                embed.set_thumbnail(url=activity.album_cover_url)
+                embed.add_field(name="Artist", value=activity.artist)
+                embed.add_field(name="Album", value=activity.album)
+                embed.set_footer(text="Song started at {}".format(activity.created_at.strftime("%H:%M")))
+                await ctx.send(embed=embed)
 
 @bot.command(name="user_status")
 async def user_status(ctx, *nickname):
@@ -54,15 +73,6 @@ async def user_status(ctx, *nickname):
             activity = member.activities[0]
             await ctx.author.send(f"Currently playing: {activity}.")
 
-            spotify_activity = discord.utils.find(
-                lambda a: isinstance(a, discord.Spotify), 
-                member.activities
-            )
-
-            if spotify_activity:
-                await ctx.author.send(f"Currently listening to {spotify_activity[0].title}")
-            else:
-                await ctx.author.send(f"{nickname} is not listening to Spotify right now...")
             
         else:
             await ctx.author.send(
@@ -76,6 +86,6 @@ async def user_status(ctx, *nickname):
     else:
         await ctx.author.send(f"{member.name} is offline")
 
-    channel = bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID)
-    await channel.send(f"Hey! {nickname} is a great person")
+    # channel = bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID)
+    # await channel.send(f"Hey! {nickname} is a great person")
 
