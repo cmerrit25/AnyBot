@@ -13,7 +13,11 @@ start_logger(logfile='info.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix="!", intents=intents, description="This is AnyBot.\nCommands currently include online and activity status checks.")
+bot = commands.Bot(
+    command_prefix="!", 
+    intents=intents, 
+    description="This is AnyBot.\nCommands currently include online and activity status checks."
+)
 
 @bot.event
 async def on_ready():
@@ -39,12 +43,16 @@ async def user_status(ctx, nickname: str):
     if member is None:
         await ctx.author.send(f"{nickname} is not in the server.")
         return
+    
+    if member.voice and member.voice.channel:
+        await ctx.author.send(f"{nickname} is currently in voice channel: {member.voice.channel.name}.")
 
     if member.status == discord.Status.online:
         await ctx.author.send(f"{member.name} is online!")
         if member.activities:
             activity = member.activities[0]
-            await ctx.author.send(f"Currently: {activity}.")
+            await ctx.author.send(f"Currently playing: {activity}.")
+            
         else:
             await ctx.author.send(
                 f"{member.name} has no current activity."
@@ -54,6 +62,3 @@ async def user_status(ctx, nickname: str):
     status_msg = f"{member.name} is {member.status}."
     await ctx.get_channel(CHANNEL_ID).send(f"Hey! {status_msg}")
 
-
-if __name__ == "__main__":
-    bot.run(TOKEN)
