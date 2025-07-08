@@ -1,0 +1,6 @@
+INFO:discord.client:logging in using static token
+INFO:discord.gateway:Shard ID None has connected to Gateway (Session ID: 3f28c35c4638d165ecbc7c27fb23d340).
+INFO:__main__:Channel ID: 448575634638241795
+INFO:discord.client:logging in using static token
+INFO:discord.gateway:Shard ID None has connected to Gateway (Session ID: 7e66bba6ea34bb7f82075ccd8ce8436a).
+INFO:__main__:Channel ID: 448575634638241795
