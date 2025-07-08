@@ -79,7 +79,7 @@ async def user_status(ctx, *nickname):
             
         else:
             await ctx.author.send(
-                f"{member.name} has no current activity."
+                f"{member.name} has no current activity..."
             )
     elif member.status == discord.Status.dnd:
         await ctx.author.send(f"{member.name} doesn\'t want to be disturbed...")
@@ -87,7 +87,7 @@ async def user_status(ctx, *nickname):
 
     
     else:
-        await ctx.author.send(f"{member.name} is offline")
+        await ctx.author.send(f"{member.name} is offline.")
 
     # channel = bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID)
     # await channel.send(f"Hey! {nickname} is a great person")
