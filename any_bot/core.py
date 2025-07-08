@@ -53,6 +53,9 @@ async def spotify(ctx, user: discord.Member = None):
                 embed.set_footer(text="Song started at {}".format(activity.created_at.strftime("%H:%M")))
                 await ctx.send(embed=embed)
 
+    else:
+        ctx.author.send("{user.name} is not participating in any activities...")
+
 @bot.command(name="user_status")
 async def user_status(ctx, *nickname):
 
