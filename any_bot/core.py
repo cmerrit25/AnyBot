@@ -12,7 +12,9 @@ CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
 start_logger(logfile='info.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-intents = discord.Intents.all()
+intents = discord.Intents().all()
+intents.members = True
+intents.presences = True
 bot = commands.Bot(
     command_prefix="!", 
     intents=intents, 
@@ -33,7 +35,7 @@ async def on_ready():
     except Exception as e:
         logger.error(f"Failed to send on_ready message: {e}")
 
-@bot.command()
+@bot.command(name="music")
 async def spotify(ctx, user: discord.Member = None):
     if user == None:
         user = ctx.author
@@ -54,7 +56,16 @@ async def spotify(ctx, user: discord.Member = None):
                 await ctx.send(embed=embed)
 
     else:
-        ctx.author.send("{user.name} is not participating in any activities...")
+        await ctx.author.send(f"{user.name} is not participating in any activities right now...")
+
+        online_status = user.client_status.status if user.client_status.status is not None else "offline"
+        desktop_status = user.client_status.desktop_status if user.client_status.desktop_status is not None else "offline"
+        mobile_status = user.client_status.mobile_status if user.client_status.mobile_status is not None else "offline"
+        web_status = user.client_status.web_status if user.client_status.web_status is not None else "offline"
+        
+        await ctx.author.send(f"{user.name} is currently {online_status} on discord, {desktop_status} on their desktop\
+        {mobile_status} on their mobile device, and {web_status} on discord web browser.")
+
 
 @bot.command(name="user_status")
 async def user_status(ctx, *nickname):
@@ -89,6 +100,29 @@ async def user_status(ctx, *nickname):
     else:
         await ctx.author.send(f"{member.name} is offline.")
 
-    # channel = bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID)
-    # await channel.send(f"Hey! {nickname} is a great person")
 
+coke_log: dict[str, int] = {}
+
+@bot.command(name="coke")
+async def coke(ctx, *nickname):
+
+    nickname = " ".join(nickname)
+    guild = ctx.guild
+    member = discord.utils.get(guild.members, display_name=nickname)
+
+    if member is None:
+        await ctx.author.send(f"{nickname} is not in the server.")
+        return
+
+    try:
+        coke_log[nickname] += 1
+    except KeyError:
+        coke_log[nickname] = 1
+
+    cokes_drank = coke_log[nickname]
+    if cokes_drank == 1:
+        await ctx.author.send(f"{nickname} has drank his first coke! Pop another!")
+    elif cokes_drank == 0:
+        await ctx.author.send(f"{nickname} needs some coke!")
+    else:
+        await ctx.author.send(f"{nickname} has drank {cokes_drank} cokes! Keep going!")
