@@ -15,11 +15,16 @@ logger = logging.getLogger(__name__)
 intents = discord.Intents().all()
 intents.members = True
 intents.presences = True
+
 bot = commands.Bot(
     command_prefix="!", 
     intents=intents, 
     description="This is AnyBot.\nCommands currently include online and activity status checks."
 )
+
+bot.load_extension("cogs.coke_cog")
+bot.load_extension("cogs.music_cog")
+bot.load_extension("cogs.user_status_cog")
 
 @bot.event
 async def on_ready():
