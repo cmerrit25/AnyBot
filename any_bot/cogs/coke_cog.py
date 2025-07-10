@@ -31,6 +31,6 @@ class CokeCog(commands.Cog):
         else:
             await ctx.author.send(f"{nickname} has drank {cokes_drank} cokes! Keep going!")
 
-def setup(bot):
-    bot.add_cog(CokeCog(bot))
+async def setup(bot):
+    await bot.add_cog(CokeCog(bot))
         

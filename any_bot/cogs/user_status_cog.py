@@ -32,5 +32,5 @@ class UserStatusCog(commands.Cog):
                 )
         elif member.status == discord.Status.dnd:
             await ctx.author.send(f"{member.name} doesn\'t want to be disturbed...")
-def setup(bot):
-    bot.add_cog(UserStatusCog(bot))
+async def setup(bot):
+    await bot.add_cog(UserStatusCog(bot))

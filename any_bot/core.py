@@ -22,9 +22,13 @@ bot = commands.Bot(
     description="This is AnyBot.\nCommands currently include online and activity status checks."
 )
 
-bot.load_extension("cogs.coke_cog")
-bot.load_extension("cogs.music_cog")
-bot.load_extension("cogs.user_status_cog")
+COGS_DIR = os.path.join(os.path.dirname(__file__),"cogs")
+async def load_extensions():
+    for filename in os.listdir(COGS_DIR):
+        if not filename.endswith(".py") or filename == "__init__.py":
+            continue
+
+        await bot.load_extension(f"any_bot.cogs.{filename[:-3]}")
 
 @bot.event
 async def on_ready():

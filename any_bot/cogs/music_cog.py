@@ -38,5 +38,5 @@ class MusicCog(commands.Cog):
             await ctx.author.send(f"{user.name} is currently {online_status} on discord, {desktop_status} on their desktop\
             {mobile_status} on their mobile device, and {web_status} on discord web browser.")
 
-def setup(bot):
-    bot.add_cog(MusicCog(bot))
+async def setup(bot):
+    await bot.add_cog(MusicCog(bot))
